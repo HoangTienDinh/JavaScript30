@@ -43,6 +43,9 @@
   </div>
 
   <script>
+    // When you want to prevent things from firing often (think performance issues)
+    // A good example is when playing games, where sometimes people keep spamming buttons and that would load up too many commands.
+    // Debounce will wait a certain amount of time before logging in the next command/prompt.
     function debounce(func, wait = 20, immediate = true) {
       var timeout;
       return function() {
@@ -58,6 +61,30 @@
       };
     }
 
+    const sliderImages = document.querySelectorAll('.slide-in');
+
+    function checkSlide(e) {
+      sliderImages.forEach(sliderImage => {
+        // Halfway through the image.
+        const slideInAt = (window.scrollY + window.innerHeight) - sliderImage.height / 2;
+        // Bottom of the image.
+        const imageBottom = sliderImage.offsetTop + sliderImage.height;
+        const isHalfShown = slideInAt > sliderImage.offsetTop;
+        const isNotScrolledPast = window.scrollY < imageBottom;
+        // window.scrollY is how many pixels from the top of the screen
+        // window.innerHeight is total pixels shown on the screen height
+        // offsetTop is the amount of pixels from the top of the element (image in this case), to the of the page.
+
+        if (isHalfShown && isNotScrolledPast) {
+          sliderImage.classList.add('active');
+        } else {
+          sliderImage.classList.remove('active');
+        }
+      })
+    }
+
+
+    window.addEventListener('scroll', debounce(checkSlide));
   </script>
 
   <style>
