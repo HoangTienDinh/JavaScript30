@@ -12,6 +12,34 @@
 <script>
   window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
+  const recognition = new SpeechRecognition();
+  // Shows you what you are saying as you say it, else if it's false it will wait until the speech is ended.
+  recognition.interimResults = true;
+
+  let p = document.createElement('p');
+  const words = document.querySelector('.words');
+  words.appendChild(p);
+
+  recognition.addEventListener('result', e => {
+    const transcript = Array.from(e.results)
+      .map(result => result[0])
+      .map(result => result.transcript)
+      .join('');
+
+      p.textContent = transcript;
+
+      if (e.results[0].isFinal) {
+        p = document.createElement('p');
+        words.appendChild(p);
+      }
+  })
+
+  // This will call recognition.start everytime the 'end' event happens. So anytime a person pauses in their speech.
+  recognition.addEventListener('end', recognition.start)
+
+
+  recognition.start();
+
 
 </script>
 
